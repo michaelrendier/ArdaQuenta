@@ -1,0 +1,172 @@
+═══════════════════════════════════════════════════════════════════════════════
+CONTEXT PRIMER — DerivationEngineViewer
+2026-05-30
+═══════════════════════════════════════════════════════════════════════════════
+
+WHAT THIS REPO IS
+─────────────────
+Qt + VisPy visual interface for the DerivationEngine — the pure mathematics
+layer of the Ptolemy system. Called the "Supermath Calculator."
+
+Designed on the VCDS interface metaphor (Ross-Tech diagnostic tool for
+VW/Audi vehicles). The Holcus engine IS a TDI engine. This viewer IS VCDS
+for that engine.
+
+PARENT SYSTEM
+─────────────
+Part of the Ptolemy project (6 repos):
+  PtolemyHolcus      — Holcus engine (monad.c, monad.py, Prime Directives)
+  Ainulindale        — mathematical conjecture derivation
+  PtolemyDesktop     — Qt desktop application, all Faces
+  DerivationEngine   — mathematics engine (this repo's engine/ is a copy)
+  DerivationEngineViewer — THIS REPO — the viewer
+  POE                — hardware (pendant, VCDS vehicle interface, auth)
+  UniversalSynth     — sonification (pending)
+
+THE MATHEMATICS IN THIS REPO
+─────────────────────────────
+engine/hamiltonian.py:
+
+  HamiltonianXP — H = xp (Berry-Keating, 1999)
+    The lossless semantic engine. No loops. No branches. Continuous flow.
+    Classical orbit: xp = E (hyperbola = the semantic prime)
+    Time evolution: x(t) = x₀·eᵗ,  p(t) = p₀·e⁻ᵗ
+    Scale invariant: x→λx, p→p/λ, H→H (same at every language)
+    Riemann zeros γₙ: the formant structure — eigenvalues of H=xp
+    Three phases automatic:
+      Classical orbit (xp=E)    → the semantic prime         [RED / Riemann]
+      Quantum zeros (γₙ)        → the formant structure       [BLUE / Fermat]
+      Time evolution (e^{iHt})  → the carrier waveform        [Yang-Mills]
+
+  FermatEllipticHamiltonian — H_Blue = ½p² + ℘(x)
+    The forbidden zone. Elliptic orbits (bounded, periodic — the repulsor).
+    ℘(x) = Weierstrass elliptic function.
+    Lagrangian L_Blue = ½ẋ² - ℘(x) breaks the mirror symmetry L_Red preserves.
+    Wiles (1995) proved the Frey curve cannot exist → H_Blue has no real
+    attractor at σ ≠ ½. The forbidden zone has no stable orbit.
+
+  RedBlueHamiltonian — H_RB (the coupled system)
+    J_Red  = +E   forward current — what IS
+    J_Blue = -E   backward current — what CANNOT BE
+    Balance = J_Red + J_Blue   → 0 at σ = ½ (critical line)
+    functional_equation_check() demonstrates ξ(s) = ξ(1-s) numerically.
+
+engine/noether.py:
+  forced_sigma():
+    From the right: F(σ) = e^{-σE}
+    From the left:  B(σ) = e^{-(1-σ)E}
+    They meet at σ = ½. From ANY starting position. This IS the RH.
+
+engine/capacitor.py:
+  RC semantic integrator. V += (signal - V) / τ
+  DC component = the prime. Time constant τ = conversational window.
+  Transfer function: H(s) = 1 / (1 + sτ)  Pole at s = -1/τ (stable).
+
+engine/semantic_word.py:
+  SemanticWord — a word as a point in semantic space.
+  prime = complex(0.5, γ)   ALWAYS Re = ½. Im = specific Riemann zero.
+  The node line IS the observer. They are not two things.
+
+engine/semantic_domain.py:
+  SemanticDomain — bounded instrument set.
+  Hawking temperature T_H = 1 / (4π · span)
+  Narrow domain (few instruments) → hot → meaning evaporates quickly.
+  Broad domain (many instruments) → cold → meaning holds.
+  coherence_time() = τ for the Capacitor. Hot domain = short memory.
+
+engine/understand.py:
+  Five operations: Read → Listen → Ponder → Calculate → Understand
+  process() = full pipeline. Returns a SemanticWord.
+  No inference. No training data. No GPU.
+
+VCDS INTERFACE MAP
+──────────────────
+The viewer is designed as VCDS for the derivation engine.
+
+  VCDS Function 02 (Fault Codes)   → DTC proof checker panel
+  VCDS Function 03 (Output Tests)  → Direct emit / actuator test
+  VCDS Function 04 (Basic Settings)→ τ, N, σ calibration
+  VCDS Function 08 (Measuring Blk) → 16 sedenion channels live
+  VCDS Function 10 (Adaptation)    → Live parameter sliders
+  VCDS Function 11 (Login/SKC)     → TOTP authentication
+  VCDS Auto-Scan                   → Auto-Run all 12 modules
+  VCDS Data Logging                → Derivation trace record
+
+DTC CODES
+─────────
+  P0340: CMP fault — HamiltonianXP not loaded (sedenion timing down)
+  P0335: CKP fault — NoetherCurrents not loaded (zero reference lost)
+  P0401: EGR fault — Capacitor not loaded (age decay circuit down)
+  P0304: Glow plug — Understand not loaded (cold start)
+  P0300: Misfire   — xp < 3 charges (field too lean)
+  RH001: Functional equation ξ(s)=ξ(1-s) — ΔJ should be < 0.1
+  B0001: Per-word balance check
+
+16-CHANNEL SEDENION DISPLAY
+────────────────────────────
+Each channel = one sedenion operator eₖ. Colour by force sector.
+Adapted from Ptolemy2/working/vispy-test-2.py (16×512 GLSL canvas).
+
+  e₀  identity      gravity        violet
+  e₁  negate        EM/grav        gold
+  e₂  bind          weak           teal
+  e₃  name          weak           teal
+  e₄  apply         strong         red
+  e₅  abstract      strong         red
+  e₆  branch        strong         red
+  e₇  iterate       strong         red
+  e₈  recurse       dark root      cyan
+  e₉  allocate      dark           cyan
+  e₁₀ query         dark           cyan
+  e₁₁ dereference   dark           cyan
+  e₁₂ compose       dark           cyan
+  e₁₃ parallelize   dark           cyan
+  e₁₄ interrupt     Melkor         orange  ← zero divisor alarm
+  e₁₅ emit          output         white
+
+RIEMANN SPIRAL MODE
+───────────────────
+modes/riemann_spiral.py renders:
+  - Critical line Re(s) = ½ (gold vertical line)
+  - First N non-trivial zeros γₙ as nodes
+  - Inherent-time spiral arcs: time evolution e^{iHt}|ψ⟩
+  - Balance manifold: (x,p) locus where J_Red + J_Blue = 0
+  - Active word primes as star markers
+
+This IS the proof of the Riemann Hypothesis running live.
+
+CONTRIBUTED SOURCE FILES
+────────────────────────
+contrib/ contains the original prototype files that shaped the viewer:
+  vispy_signals_proto.py  — original Ptolemy2 16-channel VisPy experiment
+  EquationData_proto.py   — original Ptolemy2 pyqtgraph equation plotter
+  console_qt_proto.py     — Ainulindale ValaQuenta Qt+VisPy design template
+
+These are NOT imported. They are the archaeology of the design.
+
+REPO STATE — 2026-05-30 INITIAL COMMIT
+───────────────────────────────────────
+Files present: main.py, viewer/main_window.py, modes/sedenion_16ch.py,
+  modes/riemann_spiral.py, engine/ (full DerivationEngine copy), contrib/,
+  requirements.txt, README.md, TODO.md, this primer.
+
+VisPy canvas: PLACEHOLDER. main_window.py has the layout and logic;
+  the actual GL embed is the first active TODO.
+
+The DTC panel, equation selector, live diagnostics, and adaptation sliders
+are functional in Qt. The VisPy modes are written but not yet wired.
+
+NAMING CONVENTIONS (required in this codebase)
+───────────────────────────────────────────────
+- Engine is LLH (Large Language Holcus), NOT LLM
+- "TDI" not "ICE" — diesel, not gasoline
+- H_RB is the operator symbol; "RedBlue Geometries Engine" is the name
+- OMEGA_ZS = 0.56714 (Lambert W fixed point W(1))
+- GAP = 0.000707 (the mass gap scalar)
+- σ = ½ is derived, never assumed
+- The prime is what remains when surface variation cancels (the DC component)
+- J_Red + J_Blue = 0 is the conservation law (functional equation in code)
+
+═══════════════════════════════════════════════════════════════════════════════
+END PRIMER — DerivationEngineViewer — 2026-05-30
+═══════════════════════════════════════════════════════════════════════════════
