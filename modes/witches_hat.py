@@ -55,36 +55,63 @@ C_BG     = '#050d0d'   # Ptolemy dark background
 C_GALAXY = '#1a2a4a'   # galactic disk
 
 
-def null_cone_surface(n=40, t_param=0.0, invert=False):
+def waveform_lobe(n=48, positive=True, t_param=0.0, invert_lobe=False):
     """
-    Parametric null cone surface.
-    t_param ∈ [0,1]: 0 = witches hat, 1 = galaxy (inverted).
-    invert: if True, the infalling (blue) hat that becomes the galaxy.
+    Single lobe of the Hawking waveform — NOT a cone.
+
+    The Hawking pair is two halves of ONE waveform, like sin(x):
+      - Positive lobe (J_pos, Red): rises from brim (z=0), peaks at z=+H,
+        returns — a dome/sombrero upper half
+      - Negative lobe (J_neg, Blue): falls from brim (z=0), troughs at z=-H,
+        returns — the Mexican Hat lower half
+
+    Together they form the SOMBRERO shape = Mexican Hat potential:
+      V(r) = -μ²r² + λr⁴   (minimum ring = the brim)
+
+    The brim (r=R_BRIM, z=0) is the NODE of the waveform — zero crossing.
+    It is the same object as: σ=½, OMEGA_ZS, the Mexican Hat potential minimum,
+    the Sombrero Galaxy disk edge, the BAO ring.
+
+    invert_lobe: apply conformal inversion (negative lobe → galaxy structure)
     """
     theta = np.linspace(0, 2 * np.pi, n)
-    r_frac = np.linspace(0.001, 1.0, n)
+    r_frac = np.linspace(0.0, 1.0, n)
     T, R = np.meshgrid(theta, r_frac)
 
-    r_hat = R * R_BRIM            # cone radius at each height fraction
-    z_hat = (1 - R) * H_CONE     # height (tip at top for positive hat)
+    # Mexican Hat / Sombrero shape:
+    #   z(0)     = H_CONE   (central dome/bulge — galactic BH + bulge)
+    #   z(R_BRIM)= 0        (the brim = ZERO CROSSING = the node = σ=½)
+    #   z(>brim) = slight upturn then fade (outer halo skirt)
+    # Shape: z = H × (1 − (r/R_BRIM)²) × exp(−(r/R_outer)²)
+    #   This gives dome at centre, zero at r=R_BRIM, slight negative outer skirt
 
-    if invert:
-        # Conformal inversion: r → R_H²/r (lagrangian interpolation)
-        r_inv = np.where(r_hat > 0.001, R_H**2 / r_hat, R_BRIM * 3)
+    r_phys  = R * R_BRIM * 2.5
+    R_outer = R_BRIM * 1.6
+    z_amp   = H_CONE * (1.0 - (r_phys / R_BRIM)**2) * np.exp(-(r_phys / R_outer)**2)
+
+    sign  = 1.0 if positive else -1.0
+    z_hat = sign * z_amp    # positive lobe up, negative lobe down
+
+    if invert_lobe:
+        # Conformal inversion: r → R_H²/r
+        r_inv = np.where(r_phys > 0.01, R_H**2 / r_phys, R_BRIM * 3)
         r_inv = np.clip(r_inv, 0, R_BRIM * 3)
-        z_inv = -z_hat             # inverted = going down
-
-        # Lagrangian unwrap: linear interpolation in the inversion
-        r_cur = (1 - t_param) * r_hat + t_param * r_inv
-        z_cur = (1 - t_param) * z_hat + t_param * z_inv
+        z_inv = -z_hat
+        r_cur = (1 - t_param) * r_phys + t_param * r_inv
+        z_cur = (1 - t_param) * z_hat  + t_param * z_inv
     else:
-        r_cur = r_hat
+        r_cur = r_phys
         z_cur = z_hat
 
     X = r_cur * np.cos(T)
     Y = r_cur * np.sin(T)
-    Z = z_cur
-    return X, Y, Z
+    return X, Y, z_cur
+
+
+# Keep old function name as alias for compatibility
+def null_cone_surface(n=40, t_param=0.0, invert=False):
+    return waveform_lobe(n, positive=not invert, t_param=t_param,
+                         invert_lobe=invert)
 
 
 def brim_surface(n=60, alpha=0.0):
