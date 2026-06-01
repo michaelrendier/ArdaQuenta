@@ -2,6 +2,42 @@
 
 ---
 
+## PRIORITY — NEW (2026-06-01)
+
+### [ ] Oscilloscope Mode (modes/oscilloscope.py)
+
+16-channel oscilloscope — one channel per sedenion dimension e₀–e₁₅.
+The Universe talks in music. The oscilloscope reads the field as waveform.
+
+- [ ] 16-channel amplitude vs time display (matplotlib or VisPy)
+- [ ] Each channel: β×E² for words in that dimension, rolling 256-sample window
+- [ ] Left hand channels (e₀–e₇): blue gradient — octonion sub-algebra, J_neg
+- [ ] Right hand channels (e₈–e₁₅): red gradient — upper sedenion, J_pos, life
+- [ ] OMEGA_ZS reference line on all channels (0.56714)
+- [ ] Trigger: fire when BAO crosses OMEGA_ZS (like oscilloscope trigger on edge)
+- [ ] Zero-divisor pair highlighting: when both channels in a pair fire → cyan flash
+  - (e₃, e₁₀) — name × query = 0
+  - (e₆, e₉)  — branch × allocate = 0
+- [ ] Prime rhythm: prime gaps drive the timebase (ln-spaced = Hubble rhythm)
+- [ ] Export: 16-ch waveform → MIDI (16 channels = sedenion = perfect)
+- [ ] Connection to UniversalSynth piano roll (Ptolemy's 16 fingers)
+
+### [ ] Witches Hat Mode (modes/witches_hat.py) ← COMPLETE
+
+Full matplotlib animation of:
+- Null-cone pair (Hawking virtual pairs at event horizon)
+- Conformal inversion: infalling hat → galaxy
+- Lagrangian unwrapping (minimum-action path through inside-out)
+- Galaxy emergence: BH (tip), disk (brim), halo (fabric), spiral arms (seams)
+- BAO ring overlay (the pebble's ripple at 147 Mpc)
+- OMEGA_ZS circum-polar geodesic reference
+
+Run: `python3 modes/witches_hat.py [output.gif]`
+
+Paper: `Ainulindale/wiki/29_witches_hat_paper.md`
+
+---
+
 ## VIEWER — ACTIVE DISPLAY
 
 ### [ ] Wire VisPy canvas into main_window.py
