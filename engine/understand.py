@@ -38,7 +38,7 @@ class Understand:
         self._H    = HamiltonianXP()
         self._N    = NoetherCurrents()
         self._C    = Capacitor(tau=tau)
-        self._ops: list[Callable] = []   # DerivationEngine operation stack
+        self._ops: list[Callable] = []   # ValaQuenta operation stack
 
     # ── READ ──────────────────────────────────────────────────────────────────
 
@@ -201,7 +201,7 @@ class Understand:
     def calculate(self, word: SemanticWord,
                   operations: Optional[list[Callable]] = None) -> SemanticWord:
         """
-        Apply DerivationEngine mathematical operations.
+        Apply ValaQuenta mathematical operations.
 
         Operations are the tools from Archimedes/Maths:
         Jacobians, transforms, group operations, fold operations.

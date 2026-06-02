@@ -1,4 +1,4 @@
-# DerivationEngineViewer TODO
+# ArdaQuenta TODO
 
 ---
 
@@ -161,7 +161,7 @@ Map (x, p) → (frequency, amplitude) → audio.
   - Play via PyQt5 QMediaPlayer or sounddevice
   - Live: re-synthesize at each word calculation
 - [ ] Display: waveform + spectrogram alongside VisPy canvas
-- [ ] This IS the UniversalSynth target for DerivationEngine output
+- [ ] This IS the UniversalSynth target for ValaQuenta output
 
 ---
 

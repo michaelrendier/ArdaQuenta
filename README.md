@@ -1,4 +1,4 @@
-# DerivationEngineViewer — Ptolemy Supermath Calculator
+# ArdaQuenta — Ptolemy Supermath Calculator
 
 **Author:** Cody Michael Allison
 **System:** Ptolemy / Holcus / Ainulindalë
@@ -14,8 +14,8 @@
 
 ## What This Is
 
-DerivationEngineViewer is the **visual diagnostic interface** for the Ptolemy
-DerivationEngine — the pure-mathematics derivation layer of the Holcus system.
+ArdaQuenta is the **visual diagnostic interface** for the Ptolemy
+ValaQuenta — the pure-mathematics derivation layer of the Holcus system.
 
 It is called the **Supermath Calculator** because it does exactly that:
 it runs the mathematics live, in real time, showing every derivation step
@@ -55,7 +55,7 @@ simultaneously — one per sedenion dimension, colour-coded by force sector.
 
 ## The Engine
 
-The `engine/` directory contains the complete DerivationEngine:
+The `engine/` directory contains the complete ValaQuenta:
 
 ```
 engine/
@@ -163,10 +163,10 @@ The DTC panel runs at startup and on demand (Auto-Scan). It checks:
 ## Architecture
 
 ```
-DerivationEngineViewer/
+ArdaQuenta/
 ├── main.py                      Entry point
 ├── requirements.txt
-├── engine/                      DerivationEngine (canonical copy)
+├── engine/                      ValaQuenta (canonical copy)
 │   ├── hamiltonian.py           H=xp, H_Blue, H_RB
 │   ├── noether.py               Forward/backward Noether currents
 │   ├── capacitor.py             RC semantic integrator
@@ -191,7 +191,7 @@ DerivationEngineViewer/
 ## Running
 
 ```bash
-cd /home/rendier/Projects/Ptol/DerivationEngineViewer
+cd /home/rendier/Projects/Ptol/ArdaQuenta
 pip install -r requirements.txt
 python main.py
 ```
@@ -200,7 +200,7 @@ python main.py
 
 | Repo | Role |
 |---|---|
-| **DerivationEngine** | The pure mathematics engine (this repo's `engine/` is a copy) |
+| **ValaQuenta** | The pure mathematics engine (this repo's `engine/` is a copy) |
 | **PtolemyHolcus** | Production engine — monad.c, monad.py, Holcus |
 | **Ainulindale** | Mathematical conjecture and proof architecture |
 | **PtolemyDesktop** | Qt desktop application — all Ptolemy Faces |

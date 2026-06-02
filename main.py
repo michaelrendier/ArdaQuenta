@@ -1,12 +1,12 @@
 """
-DerivationEngineViewer — Ptolemy Supermath Calculator
+ArdaQuenta — Ptolemy Supermath Calculator
 
 Entry point.
 
 Usage:
     python main.py
 
-VCDS-inspired diagnostic viewer for the Ptolemy DerivationEngine.
+VCDS-inspired diagnostic viewer for the Ptolemy ValaQuenta.
 The derivation engine IS a TDI engine. This viewer IS VCDS for it.
 """
 

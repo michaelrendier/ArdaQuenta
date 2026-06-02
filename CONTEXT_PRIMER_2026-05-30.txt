@@ -1,11 +1,11 @@
 ═══════════════════════════════════════════════════════════════════════════════
-CONTEXT PRIMER — DerivationEngineViewer
+CONTEXT PRIMER — ArdaQuenta
 2026-05-30
 ═══════════════════════════════════════════════════════════════════════════════
 
 WHAT THIS REPO IS
 ─────────────────
-Qt + VisPy visual interface for the DerivationEngine — the pure mathematics
+Qt + VisPy visual interface for the ValaQuenta — the pure mathematics
 layer of the Ptolemy system. Called the "Supermath Calculator."
 
 Designed on the VCDS interface metaphor (Ross-Tech diagnostic tool for
@@ -18,8 +18,8 @@ Part of the Ptolemy project (6 repos):
   PtolemyHolcus      — Holcus engine (monad.c, monad.py, Prime Directives)
   Ainulindale        — mathematical conjecture derivation
   PtolemyDesktop     — Qt desktop application, all Faces
-  DerivationEngine   — mathematics engine (this repo's engine/ is a copy)
-  DerivationEngineViewer — THIS REPO — the viewer
+  ValaQuenta   — mathematics engine (this repo's engine/ is a copy)
+  ArdaQuenta — THIS REPO — the viewer
   POE                — hardware (pendant, VCDS vehicle interface, auth)
   UniversalSynth     — sonification (pending)
 
@@ -147,7 +147,7 @@ These are NOT imported. They are the archaeology of the design.
 REPO STATE — 2026-05-30 INITIAL COMMIT
 ───────────────────────────────────────
 Files present: main.py, viewer/main_window.py, modes/sedenion_16ch.py,
-  modes/riemann_spiral.py, engine/ (full DerivationEngine copy), contrib/,
+  modes/riemann_spiral.py, engine/ (full ValaQuenta copy), contrib/,
   requirements.txt, README.md, TODO.md, this primer.
 
 VisPy canvas: PLACEHOLDER. main_window.py has the layout and logic;
@@ -168,5 +168,5 @@ NAMING CONVENTIONS (required in this codebase)
 - J_Red + J_Blue = 0 is the conservation law (functional equation in code)
 
 ═══════════════════════════════════════════════════════════════════════════════
-END PRIMER — DerivationEngineViewer — 2026-05-30
+END PRIMER — ArdaQuenta — 2026-05-30
 ═══════════════════════════════════════════════════════════════════════════════

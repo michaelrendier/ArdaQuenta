@@ -1,1 +1,1 @@
-"""DerivationEngineViewer Qt application layer."""
+"""ArdaQuenta Qt application layer."""

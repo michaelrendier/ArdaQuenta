@@ -1,5 +1,5 @@
 """
-Lexicon — The accumulated experience of the DerivationEngine.
+Lexicon — The accumulated experience of the ValaQuenta.
 
 Maps Riemann zeros (primes) to the surface forms that point at them.
 Persists across sessions. Grows with every corpus processed.

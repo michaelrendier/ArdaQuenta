@@ -1,5 +1,5 @@
 """
-DerivationEngine
+ValaQuenta
 
 The mathematical derivation engine for Ptolemy.
 Built on H = xp (Berry-Keating, 1999).
@@ -11,14 +11,14 @@ Five operations:
     Read       — surface form → candidate prime
     Listen     — acoustic signal → formant prime
     Ponder     — H = xp evolution → conserved prime
-    Calculate  — DerivationEngine operations → projections
+    Calculate  — ValaQuenta operations → projections
     Understand — Capacitor extraction → DC prime
 
 No inference. No training data. No GPU. No eddy currents.
 Runs on a laptop.
 
 Usage:
-    from DerivationEngine import Understand
+    from ValaQuenta import Understand
 
     engine = Understand(tau=1.0)
     word   = engine.process("tree")

@@ -1,5 +1,5 @@
 """
-CorpusProcessor — Feed any text archive to the DerivationEngine.
+CorpusProcessor — Feed any text archive to the ValaQuenta.
 
 Reads files. Splits into passages. Sets semantic domains from context.
 Processes every word. Records every prime. Builds the lexicon.
@@ -43,7 +43,7 @@ _TOKEN_RE    = re.compile(r"[\w؀-ۿ֐-׿ऀ-ॿ"
 
 class CorpusProcessor:
     """
-    Feed a text archive to the DerivationEngine.
+    Feed a text archive to the ValaQuenta.
 
     For each passage in each file:
         1. Create a SemanticDomain from the passage text

@@ -1,5 +1,5 @@
 """
-viewer/main_window.py — DerivationEngineViewer main Qt window.
+viewer/main_window.py — ArdaQuenta main Qt window.
 
 VCDS-inspired layout. The derivation engine IS the TDI engine.
 This viewer IS VCDS for that engine.
@@ -345,7 +345,7 @@ class EquationPanel(QWidget):
 
 class MainWindow(QMainWindow):
     """
-    DerivationEngineViewer — VCDS for the Ptolemy mathematics engine.
+    ArdaQuenta — VCDS for the Ptolemy mathematics engine.
 
     The derivation engine IS a TDI engine.
     This window IS the VCDS diagnostic tool for it.
@@ -355,7 +355,7 @@ class MainWindow(QMainWindow):
         if not _HAS_QT:
             raise RuntimeError('PyQt5 required')
         super().__init__()
-        self.setWindowTitle('DerivationEngineViewer — Ptolemy Supermath Calculator')
+        self.setWindowTitle('ArdaQuenta — Ptolemy Supermath Calculator')
         self.setMinimumSize(1024, 700)
         self.setStyleSheet(_style_sheet())
 
@@ -410,7 +410,7 @@ class MainWindow(QMainWindow):
         self._canvas_widget.setMinimumWidth(600)
         self._canvas_widget.setStyleSheet(f'background: #050510; border: 1px solid {BORDER};')
         canvas_lbl = QLabel(
-            '⊗  DerivationEngineViewer\n\n'
+            '⊗  ArdaQuenta\n\n'
             'VisPy canvas mounts here.\n'
             'Select a Control Module →\n'
             'then choose a Display Mode.',
@@ -479,7 +479,7 @@ class MainWindow(QMainWindow):
 
     def _about(self):
         self._output.append(
-            '⊗ DerivationEngineViewer — Ptolemy Supermath Calculator\n'
+            '⊗ ArdaQuenta — Ptolemy Supermath Calculator\n'
             '  H_RB = Σ_p p^{-σ} [R̂_p ⊗ ∂̂_{∂M} + ∂̂†_{∂M} ⊗ B̂_p]\n'
             f'  {len(MODULES)} control modules  |  VCDS-protocol diagnostic interface\n'
             '  © 2026 Cody Michael Allison'
@@ -662,12 +662,12 @@ class MainWindow(QMainWindow):
 
 
 def run():
-    """Launch the DerivationEngineViewer application."""
+    """Launch the ArdaQuenta application."""
     if not _HAS_QT:
         print('PyQt5 not available. Install with: pip install PyQt5')
         return 1
     app = QApplication.instance() or QApplication(sys.argv)
-    app.setApplicationName('DerivationEngineViewer')
+    app.setApplicationName('ArdaQuenta')
     win = MainWindow()
     win.show()
     return app.exec_()
