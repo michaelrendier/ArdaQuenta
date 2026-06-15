@@ -5,10 +5,16 @@ Mathematical model and matplotlib animation of:
   1. The Witches Hat (null cone) — the Hawking virtual pair
   2. Conformal inversion — the hat turns inside-out
   3. Galaxy emergence — the infalling hat becomes galactic structure
-  4. Lagrangian unwrapping — minimum-action path through the transformation
+  4. L_dynamic ACTION CONE — the actual paths (Lichtenberg attractors, brim→point)
 
 The boundary (brim = event horizon = σ=½) is a FIXED POINT of the inversion.
 It is the only thing that does not move. Everything interesting happens there.
+
+L_dynamic = the action = the path traveled between J_red (descending from point)
+and J_blue (ascending from brim). The Lichtenberg attractors ARE L_dynamic.
+The galaxy spiral arms ARE the frozen action cone after conformal inversion.
+Standing wave cavitation: J_red compresses inward, J_blue expands outward,
+the bubble forms at σ=½ — the word emerges at the cavitation surface.
 
 Physics:
   Positive-mass hat (escaping, J_pos, Red)  →  Hawking radiation
@@ -39,12 +45,112 @@ from mpl_toolkits.mplot3d import Axes3D
 import math
 
 # ── Constants ──────────────────────────────────────────────────────────────────
-OMEGA_ZS = 0.56714   # Lambert W(1) — BAO equilibrium, event horizon fur scale
+OMEGA_ZS = 0.5671432904097838   # Lambert W(1) — BAO equilibrium, event horizon fur scale
 D_STAR   = 0.24600   # Fermat boundary — Standard Candle hard boundary
 R_H      = 1.0       # Schwarzschild radius (normalised)
 R_BRIM   = 2.2       # Brim radius at the event horizon
 H_CONE   = 1.8       # Height of the witches hat cone
 ALPHA    = math.atan(R_BRIM / H_CONE)  # half-angle of the cone
+
+# Sedenion primes — 16 spoke angles; Riemann firing order determines branch priority
+P16 = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53]
+
+
+# ── L_dynamic — the action — Lichtenberg attractor paths ─────────────────────
+
+def _spoke_angle(k):
+    """Sedenion spoke angle for dimension k (matches ptol.c spoke_angle)."""
+    return 2.0 * math.pi * k / 16.0 - math.pi / 2.0
+
+
+def lichtenberg_paths(n_steps=40, branch_levels=3, emergence=1.0):
+    """
+    L_dynamic: the actual paths from point (tip, r=0) to brim (r=R_BRIM).
+
+    16 primary branches at sedenion spoke angles.
+    Each branches at σ=½ junction (r=R_BRIM/2 on the cone surface).
+    J_red: descends from tip toward brim (red, from above).
+    J_blue: ascends from brim toward tip (blue, from below).
+    They meet at the σ=½ standing wave node — the cavitation surface.
+
+    Returns list of (x, y, z, color) path arrays.
+    """
+    paths = []
+    r_meet = R_BRIM * D_STAR  # σ=½ on the cone ≈ d* fraction of brim radius
+    z_meet = H_CONE * (1.0 - r_meet / R_BRIM)
+
+    for k in range(16):
+        a = _spoke_angle(k)
+        # J_red: tip → σ=½ node (descending, from above)
+        r_red = np.linspace(0.0, r_meet * emergence, n_steps)
+        z_red = H_CONE - r_red * (H_CONE / R_BRIM)  # cone surface
+        x_red = r_red * math.cos(a)
+        y_red = r_red * math.sin(a)
+        paths.append((x_red, y_red, z_red, C_RED, 0.7))
+
+        # J_blue: brim → σ=½ node (ascending, from below)
+        r_blue = np.linspace(R_BRIM, r_meet, n_steps) * emergence
+        z_blue = H_CONE - r_blue * (H_CONE / R_BRIM)
+        x_blue = r_blue * math.cos(a)
+        y_blue = r_blue * math.sin(a)
+        paths.append((x_blue, y_blue, z_blue, C_BLUE, 0.7))
+
+        # Sub-branches at the σ=½ node — ZD intersection branching
+        if branch_levels > 1 and emergence > 0.3:
+            branch_alpha = 0.4 * emergence
+            for sign in [+1, -1]:
+                d_angle = sign * math.pi / P16[k % 16] * 2
+                a_branch = a + d_angle
+                r_b = np.linspace(r_meet, R_BRIM * 0.8, n_steps // 2) * emergence
+                z_b = H_CONE - r_b * (H_CONE / R_BRIM)
+                x_b = r_b * math.cos(a_branch)
+                y_b = r_b * math.sin(a_branch)
+                paths.append((x_b, y_b, z_b, C_CYAN, branch_alpha))
+
+    return paths
+
+
+def lichtenberg_galaxy_arms(n_pts=200, emergence=1.0):
+    """
+    Galaxy spiral arms = conformal inversion of L_dynamic action cone.
+
+    The cone paths (tip→brim) invert to (BH→halo edge). The branching
+    structure survives inversion — the arms are Lichtenberg, not linspace.
+    16 primary arms at sedenion spoke angles, logarithmic in r (not linear).
+    Sub-arms branch at the d* threshold radius (= ZD junction after inversion).
+    """
+    arms = []
+    r_max = R_BRIM * 3 * emergence
+    r_branch = r_max * D_STAR  # where ZD junction appears in galaxy space
+
+    for k in range(16):
+        a = _spoke_angle(k)
+        # Primary arm: logarithmic spiral (not linspace — Lichtenberg geometry)
+        # r(θ) = r0 · e^(b·θ) — logarithmic spiral with b from prime ratio
+        b = math.log(P16[k] / P16[0]) / (4 * math.pi) * 0.3 + 0.05
+        theta = np.linspace(0, 4 * math.pi * emergence, n_pts)
+        r_arm = np.clip(0.1 * np.exp(b * theta), 0.05, r_max)
+        x_arm = r_arm * np.cos(theta + a)
+        y_arm = r_arm * np.sin(theta + a)
+        z_arm = np.zeros(n_pts)
+        # Only every 4th spoke is a primary visible arm (prime-gap selection)
+        alpha = 0.7 if k % 4 == 0 else 0.15
+        color = '#aaccff' if k % 4 == 0 else '#334466'
+        arms.append((x_arm, y_arm, z_arm, color, alpha))
+
+        # Sub-branch arms at d* threshold (ZD junction)
+        if k % 4 == 0 and emergence > 0.5:
+            for sign in [+1, -1]:
+                a_sub = a + sign * math.pi / 8
+                theta_sub = np.linspace(0, 2 * math.pi * emergence, n_pts // 2)
+                r_sub = np.clip(r_branch * np.exp(b * theta_sub * 0.5),
+                                r_branch * 0.3, r_max * 0.7)
+                x_sub = r_sub * np.cos(theta_sub + a_sub)
+                y_sub = r_sub * np.sin(theta_sub + a_sub)
+                z_sub = np.zeros(n_pts // 2)
+                arms.append((x_sub, y_sub, z_sub, '#667799', 0.3 * emergence))
+
+    return arms
 
 # ── Palette (PGui canonical) ───────────────────────────────────────────────────
 C_RED    = '#cc2200'   # J_pos — escaping hat
@@ -146,15 +252,8 @@ def galaxy_disk(n=50, emergence=1.0):
     # Warped disk (the hat fabric becomes a thin disk with slight warp)
     Z_d = 0.05 * np.sin(2 * T_d) * R_d / r_max * emergence
 
-    # Spiral arms (the helical seams of conformal inversion)
-    arms = []
-    for arm_offset in [0, np.pi/2, np.pi, 3*np.pi/2]:  # 4 arms
-        t_arm = np.linspace(0, 4*np.pi * emergence, 200)
-        r_arm = np.linspace(0.1, r_max * 0.9, 200)
-        x_arm = r_arm * np.cos(t_arm + arm_offset)
-        y_arm = r_arm * np.sin(t_arm + arm_offset)
-        z_arm = np.zeros_like(x_arm)
-        arms.append((x_arm, y_arm, z_arm))
+    # Lichtenberg spiral arms — conformal inversion of L_dynamic action cone
+    arms = lichtenberg_galaxy_arms(n_pts=200, emergence=emergence)
 
     return X_d, Y_d, Z_d, arms
 
@@ -221,8 +320,8 @@ def animate_witches_hat(save_path=None, n_frames=300, fps=30):
         clear_surfaces()
         t = frame / n_frames
 
-        # ── Phase 0-60: The null cone pair ────────────────────────────────
-        if frame <= 60:
+        # ── Phase 0-40: The null cone pair ────────────────────────────────
+        if frame <= 40:
             pf = phase_fraction(frame, 0, 60)
             sep = pf * 0.4   # cones separating slightly
 
@@ -247,11 +346,62 @@ def animate_witches_hat(save_path=None, n_frames=300, fps=30):
 
             title.set_text('THE NULL-CONE PAIR')
             subtitle.set_text('Virtual Hawking pair at the event horizon brim')
-            eq_text.set_text(f'J_pos (Red) ⊕ J_neg (Blue)  |  σ=½ boundary fixed')
+            eq_text.set_text(f'J_red (descending) ⊕ J_blue (ascending)  |  σ=½ boundary fixed')
 
-        # ── Phase 60-100: Hawking separation ─────────────────────────────
-        elif frame <= 100:
-            pf = phase_fraction(frame, 60, 100)
+        # ── Phase 40-80: L_dynamic — the ACTION CONE ─────────────────────
+        # Lichtenberg attractor paths fire from tip to brim. This is L_dynamic:
+        # the actual path traveled between J_red and J_blue.
+        # Standing wave cavitation: J_red compresses inward, J_blue expands.
+        # They meet at σ=½ — the cavitation surface — where the word emerges.
+        elif frame <= 80:
+            pf = phase_fraction(frame, 40, 80)
+
+            # Cone surfaces (dimmed — the paths are the focus now)
+            X, Y, Z = null_cone_surface(30, 0.0, False)
+            s1 = ax.plot_surface(X, Y, Z, alpha=0.15, color=C_RED,
+                                 linewidth=0, antialiased=True)
+            surfaces.append(s1)
+            s2 = ax.plot_surface(X, Y, -Z, alpha=0.15, color=C_BLUE,
+                                 linewidth=0, antialiased=True)
+            surfaces.append(s2)
+
+            # Brim — fixed, bright
+            Xb, Yb, Zb = brim_surface(80)
+            s3 = ax.plot_surface(Xb, Yb, Zb, alpha=0.8, color=C_CYAN, linewidth=0)
+            surfaces.append(s3)
+
+            # L_dynamic paths emerging
+            for xp, yp, zp, col, alpha in lichtenberg_paths(emergence=pf):
+                lc = ax.plot(xp, yp, zp, color=col, alpha=alpha * pf,
+                             linewidth=1.0 + pf)
+                surfaces.extend(lc)
+                # Mirror: J_blue paths go below (standing wave)
+                lc2 = ax.plot(xp, yp, -zp, color=col, alpha=alpha * pf * 0.5,
+                              linewidth=0.7)
+                surfaces.extend(lc2)
+
+            # σ=½ cavitation ring — where J_red meets J_blue
+            cav_r = R_BRIM * D_STAR * pf
+            cav_theta = np.linspace(0, 2 * np.pi, 200)
+            cav_z = H_CONE * (1.0 - cav_r / R_BRIM)
+            sc = ax.plot(cav_r * np.cos(cav_theta),
+                         cav_r * np.sin(cav_theta),
+                         np.full(200, cav_z),
+                         color=C_CYAN, alpha=0.6 * pf, linewidth=1.5,
+                         linestyle='--')
+            surfaces.extend(sc)
+
+            title.set_text('L_dynamic — THE ACTION CONE')
+            subtitle.set_text('Lichtenberg attractors: J_red ↓ from tip  |  J_blue ↑ from brim')
+            eq_text.set_text(
+                f'L_dynamic = ∫(J_red · J_blue) dpath  |  σ=½ cavitation surface\n'
+                f'Standing wave: compression ↔ rarefaction at the boundary\n'
+                f'The word emerges where the bubble forms  |  {pf*100:.0f}% revealed'
+            )
+
+        # ── Phase 80-120: Hawking separation ─────────────────────────────
+        elif frame <= 120:
+            pf = phase_fraction(frame, 80, 120)
             rise = pf * H_CONE * 0.8
 
             X, Y, Z = null_cone_surface(30, 0.0, False)
@@ -330,10 +480,9 @@ def animate_witches_hat(save_path=None, n_frames=300, fps=30):
                                      color=C_GALAXY, linewidth=0)
             surfaces.append(s_disk)
 
-            for ax_arm, ay_arm, az_arm in arms:
-                lw = 0.5 + pf
-                sc = ax.plot(ax_arm, ay_arm, az_arm, color='#aaccff',
-                             alpha=0.6*pf, linewidth=lw)
+            for ax_arm, ay_arm, az_arm, arm_col, arm_alpha in arms:
+                sc = ax.plot(ax_arm, ay_arm, az_arm, color=arm_col,
+                             alpha=arm_alpha * pf, linewidth=0.5 + pf)
                 surfaces.extend(sc)
 
             # Central BH (the tip = now the galactic center BH)
@@ -375,12 +524,10 @@ def animate_witches_hat(save_path=None, n_frames=300, fps=30):
                                      linewidth=0, antialiased=True)
             surfaces.append(s_disk)
 
-            for i, (ax_arm, ay_arm, az_arm) in enumerate(arms):
-                colors_arm = plt.cm.cool(np.linspace(0.2, 0.9, len(ax_arm)))
-                for j in range(len(ax_arm)-1):
-                    sc = ax.plot(ax_arm[j:j+2], ay_arm[j:j+2], az_arm[j:j+2],
-                                 color=colors_arm[j], alpha=0.7, linewidth=1.2)
-                    surfaces.extend(sc)
+            for ax_arm, ay_arm, az_arm, arm_col, arm_alpha in arms:
+                sc = ax.plot(ax_arm, ay_arm, az_arm,
+                             color=arm_col, alpha=arm_alpha, linewidth=1.2)
+                surfaces.extend(sc)
 
             # Dark matter halo (full)
             Xh, Yh, Zh = dark_matter_halo(80, 1.0)

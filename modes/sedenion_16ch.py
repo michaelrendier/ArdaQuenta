@@ -49,7 +49,7 @@ SECTOR_COLOURS = np.array([
     [0.87, 0.87, 0.87],  # e15 emit            white
 ], dtype=np.float32)
 
-OMEGA_ZS  = 0.56714
+OMEGA_ZS  = 0.5671432904097838
 N_ROWS    = 16       # sedenion dimensions
 N_SAMPLES = 512      # history depth per channel
 

@@ -19,7 +19,7 @@ Layout (mirrors VCDS main screen structure):
 │  DTC / PROOF CHECKER     │  LIVE DIAGNOSTICS (Measuring Block 0) │
 │  P0300: misfire …        │  J_Red     0.5672                     │
 │  ✓ Functional eq: Δ=0   │  J_Blue   -0.5671                     │
-│                          │  BAO       0.56714                    │
+│                          │  BAO       0.5671432904097838                    │
 └──────────────────────────────────────────────────────────────────┘
 
 :class:`MainWindow` — top-level QMainWindow.
@@ -59,7 +59,7 @@ RED_HI    = '#ff4444'
 TEAL      = '#2fffd0'
 BORDER    = '#1e1e2e'
 
-OMEGA_ZS  = 0.56714
+OMEGA_ZS  = 0.5671432904097838
 
 # ── Control module definitions (equation list) ─────────────────────────────────
 MODULES = [

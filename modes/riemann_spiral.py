@@ -22,7 +22,7 @@ from typing import Optional, List, Tuple
 
 from engine.hamiltonian import RIEMANN_ZEROS, HamiltonianXP, RedBlueHamiltonian
 
-OMEGA_ZS  = 0.56714
+OMEGA_ZS  = 0.5671432904097838
 GAP       = 0.000707
 N_DEFAULT = 20
 
